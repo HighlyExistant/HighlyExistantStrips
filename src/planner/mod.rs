@@ -38,6 +38,7 @@ impl<D: Domain> StripsPlanner<D> {
         let mut map: HashMap<StateList<D>, NotNan<f32>> = HashMap::new(); // close list
         let mut heap_count = 0;
         while let Some(plan) = heap.pop() {
+            println!("{:?}", plan.inner().goals);
             if plan.inner().goals.eval(&mut agent.state) { // best plan found
                 println!("HEAP PUSH COUNT {}", heap_count);
                 return Some(plan);

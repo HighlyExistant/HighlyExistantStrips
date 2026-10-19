@@ -143,9 +143,9 @@ fn main() {
         turn_on_computer.clone(),
     ]);
     let mut agent: Agent<BasicDomain> = Agent::new();
-    agent.state.insert(FactNames::HasBazooka, true);
-    agent.state.insert(FactNames::IsInRoom, true);
-    let goal = Condition::Eq(FactNames::IsInRoom, false);
+    // agent.state.insert(FactNames::IsInRoom, true);
+    let goal = Condition::Eq(FactNames::IsComputerOn, true);
+
     let node = planner.build_plan(&mut agent, goal);
     if let Some(plan) = node {
         for i in plan {
