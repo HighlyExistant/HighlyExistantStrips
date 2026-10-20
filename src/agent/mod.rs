@@ -1,4 +1,9 @@
-use std::{cell::{RefCell, UnsafeCell}, collections::HashMap, hash::Hash, sync::{Arc, RwLock}};
+use std::{
+    cell::{RefCell, UnsafeCell},
+    collections::HashMap,
+    hash::Hash,
+    sync::{Arc, RwLock},
+};
 
 use crate::domain::{Domain, Fact};
 #[derive(Clone, PartialEq, Eq)]
@@ -15,19 +20,29 @@ impl<D: Domain> Hash for StateList<D> {
 
 impl<D: Domain> StateList<D> {
     pub fn new() -> Self {
-        Self { state: HashMap::new(), hash: 0u64 }
+        Self {
+            state: HashMap::new(),
+            hash: 0u64,
+        }
     }
-    pub fn insert(&mut self, fact: D::FactName, enumeration: <D::FactName as Fact>::Enumeration) -> Option<<<D as Domain>::FactName as Fact>::Enumeration> {
+    pub fn insert(
+        &mut self,
+        fact: D::FactName,
+        enumeration: <D::FactName as Fact>::Enumeration,
+    ) -> Option<<<D as Domain>::FactName as Fact>::Enumeration> {
         if let Some(prev) = self.state.get(&fact) {
             self.hash ^= D::FactName::to_uuid(&fact, prev.clone());
             self.hash ^= D::FactName::to_uuid(&fact, enumeration.clone());
         } else {
             self.hash ^= D::FactName::to_uuid(&fact, enumeration.clone());
         }
-        
+
         self.state.insert(fact, enumeration)
     }
-    pub fn get_value(&mut self, fact: &D::FactName) -> <<D as Domain>::FactName as Fact>::Enumeration {
+    pub fn get_value(
+        &mut self,
+        fact: &D::FactName,
+    ) -> <<D as Domain>::FactName as Fact>::Enumeration {
         if let Some(val) = self.state.get(fact).cloned() {
             val
         } else {
@@ -44,6 +59,8 @@ pub struct Agent<D: Domain> {
 
 impl<D: Domain> Agent<D> {
     pub fn new() -> Self {
-        Self { state: StateList::new() }
+        Self {
+            state: StateList::new(),
+        }
     }
 }

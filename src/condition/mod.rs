@@ -1,4 +1,7 @@
-use crate::{agent::StateList, domain::{Domain, Fact}};
+use crate::{
+    agent::StateList,
+    domain::{Domain, Fact},
+};
 
 #[derive(Debug, Clone)]
 pub enum Condition<D: Domain> {
@@ -25,9 +28,7 @@ impl<D: Domain> Condition<D> {
                 }
                 false
             }
-            Condition::Eq(val, enumeration) => {
-                state.get_value(val) == enumeration.clone()
-            }
+            Condition::Eq(val, enumeration) => state.get_value(val) == enumeration.clone(),
         }
     }
     pub fn add_conditions(&mut self, condition: Condition<D>) {
@@ -69,9 +70,7 @@ impl<D: Domain> Condition<D> {
                 }
                 false
             }
-            Condition::Eq(val, enumeration) => {
-                state.get_value(val) == enumeration.clone()
-            }
+            Condition::Eq(val, enumeration) => state.get_value(val) == enumeration.clone(),
         }
     }
     pub fn eval(&self, state: &mut StateList<D>) -> bool {
@@ -92,9 +91,7 @@ impl<D: Domain> Condition<D> {
                 }
                 false
             }
-            Condition::Eq(val, enumeration) => {
-                state.get_value(val) == enumeration.clone()
-            }
+            Condition::Eq(val, enumeration) => state.get_value(val) == enumeration.clone(),
         }
     }
 }

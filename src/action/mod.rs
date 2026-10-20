@@ -11,7 +11,6 @@ pub trait Action<D: Domain> {
     fn preconditions(&self) -> &Condition<D>;
     fn effects(&self) -> &Effect<D>;
     fn cost(&self, goals: &Condition<D>) -> NotNan<f32> {
-        
         NotNan::new(1.0).unwrap()
     }
     fn action(&self, agent: &Agent<D>, delta: f32) -> bool;
