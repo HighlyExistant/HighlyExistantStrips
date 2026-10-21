@@ -76,6 +76,9 @@ impl<D: Domain> PlanNode<D> {
     pub fn inner(&self) -> std::cell::Ref<'_, PlanNodeInner<D>> {
         self.inner.borrow()
     }
+    pub fn inner_mut(&self) -> std::cell::RefMut<'_, PlanNodeInner<D>> {
+        self.inner.borrow_mut()
+    }
     pub fn cost(&self) -> NotNan<f32> {
         self.inner().cost
     }

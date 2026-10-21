@@ -3,7 +3,7 @@ use std::rc::Rc;
 use crate::{action::Action, domain::Domain, planner::node::PlanNode};
 
 pub struct Plan<D: Domain> {
-    actions: Vec<Rc<dyn Action<D>>>,
+    pub(crate) actions: Vec<Rc<dyn Action<D>>>,
     current_step: usize,
 }
 

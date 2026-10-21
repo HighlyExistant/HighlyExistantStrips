@@ -41,19 +41,36 @@ impl<D: Domain> StripsPlanner<D> {
         })
     }
     pub fn build_plan(&self, agent: &mut Agent<D>, goal: Condition<D>) -> Option<Plan<D>> {
-        self.build_plan_node(agent, goal).map(|p| Plan::from(p))
+        match goal {
+            Condition::And(_) => {
+                unimplemented!("Does not support Partial Order Planning");
+            }
+            Condition::Or(conditions) => {
+                let mut minimum_effort: Option<Plan<D>> = None;
+                for condition in &conditions {
+                    if let Some(node) = self.build_plan_node(agent, condition.clone()).map(|p| Plan::from(p)) {
+                        if node.actions.len() < minimum_effort.as_ref().map(|p|p.actions.len()).unwrap_or(usize::MAX) {
+                            minimum_effort = Some(node);
+                        }
+                    }
+                }
+                return minimum_effort;
+            }
+            Condition::Eq(_, _) => {
+                return self.build_plan_node(agent, goal).map(|p| Plan::from(p));
+            }
+        }
     }
     fn build_plan_node(&self, agent: &mut Agent<D>, goal: Condition<D>) -> Option<PlanNode<D>> {
-        if let Condition::And(_) = &goal {
-            panic!("Multiple goal conditions are not supported");
-        }
+        // if let Condition::And(_) = &goal {
+        //     panic!("Multiple goal conditions are not supported");
+        // }
         let goal = Condition::And(vec![goal]);
         let mut heap: BinaryHeap<PlanNode<D>> = BinaryHeap::new(); // open list
         let current_plan = PlanNode::from_state(&agent.state, &goal);
         heap.push(current_plan);
         let mut map: HashMap<StateList<D>, NotNan<f32>> = HashMap::new(); // close list
         while let Some(plan) = heap.pop() {
-            println!("{:?}", plan.inner().goals);
             if plan.inner().goals.eval(&mut agent.state) {
                 // best plan found
                 return Some(plan);
